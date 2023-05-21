@@ -35,8 +35,6 @@ export const authRoutes = async (app: FastifyInstance) => {
     })
 
 
-    console.log(userResponse)
-
     const userSchema = z.object({
       id: z.number(),
       login: z.string(),
