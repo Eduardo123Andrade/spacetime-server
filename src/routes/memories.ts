@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify"
 import { prisma } from "../lib/prisma"
 import { z } from "zod"
-import { request } from "http"
 
 export const memoriesRoutes = async (app: FastifyInstance) => {
 
@@ -12,14 +11,14 @@ export const memoriesRoutes = async (app: FastifyInstance) => {
   app.get("/memories", async (request) => {
     await request.jwtVerify()
 
-    const { sub: id } = request.user
+    const { sub: userId } = request.user
 
     const memories = await prisma.memory.findMany({
       orderBy: {
         createdAt: "asc"
       },
       where: {
-        id
+        userId
       }
     })
 
@@ -28,7 +27,8 @@ export const memoriesRoutes = async (app: FastifyInstance) => {
       return {
         id: memory.id,
         coverUrl: memory.coverUrl,
-        excerpt: memory.content.substring(0, 120).concat("...")
+        excerpt: memory.content.substring(0, 120).concat("..."),
+        createdAt: memory.createdAt
       }
     })
   })
